@@ -4,7 +4,9 @@
   "description": "![image](https://cdn.discordapp.com/attachments/1012411945141424218/1012430446556090468/JexactylBannerBasic.jpg)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "direct": "node index.js",
+    "init": "npm i && node setup.js",
+    "es-lint": "npx eslint '*.js' --fix"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +14,12 @@
   "dependencies": {
     "express": "^4.18.2",
     "systeminformation": "^5.17.12"
+  },
+  "devDependencies": {
+    "eslint": "^8.41.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1"
   }
 }
