@@ -2,7 +2,7 @@ const express = require('express')
 const si = require('systeminformation')
 const { exec } = require('child_process')
 const app = express()
-const port = 3001
+const port = 3000
 
 const folderPath = '/mnt/matheus/Backup/ptero/'
 // Obter a data atual
