@@ -30,7 +30,7 @@ function getBackupSize (path, callback) {
 
   exec(command, (error, stdout) => {
     if (error) {
-      callback(null, `Erro ao obter o tamanho do ${path}.`)
+      callback(null, 'ERROR 500.')
     } else {
       const [size] = stdout.split('\t')
       const folderSizeMB = formatBytes(Number(size))
