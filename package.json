@@ -2,10 +2,10 @@
   "name": "ashu-api",
   "version": "1.0.0",
   "description": "![image](https://cdn.discordapp.com/attachments/1012411945141424218/1012430446556090468/JexactylBannerBasic.jpg)",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "direct": "node index.js",
-    "init": "npm i && node setup.js",
+    "main": "node app.js",
+    "init": "npm i && node app.js",
     "es-lint": "npx eslint '*.js' --fix"
   },
   "keywords": [],
