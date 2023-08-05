@@ -7,7 +7,7 @@ const { Last24H } = require('./src/hourlyData')
 const port = 3001
 
 BackupUpdate()
-await Last24H(port)
+Last24H(port)
 setInterval(async () => {
   BackupUpdate()
   await Last24H(port)
