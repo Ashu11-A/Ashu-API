@@ -11,7 +11,7 @@ new App().server.listen(process.env.PORT, () => {
 BackupUpdate()
 Last24H(Number(process.env.PORT))
 
-setInterval(async () => {
+setInterval(() => {
   BackupUpdate()
   Last24H(Number(process.env.PORT))
 }, 1000 * 60 * 30);
