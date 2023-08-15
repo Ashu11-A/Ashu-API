@@ -11,6 +11,6 @@ export function BackupInfo(req: Request, res: Response) {
       hourlyData: db.get('hourlyData')
     })
   } catch {
-    res.status(500).send({ err: "Houve um erro na requisição" })
+    return res.status(500).send({ err: "Houve um erro na requisição" })
   }
 }
