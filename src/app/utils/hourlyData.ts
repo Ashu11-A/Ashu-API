@@ -1,19 +1,24 @@
-const SimplDB = require('simpl.db')
-const axios = require('axios')
+import { Database } from 'simpl.db'
+import axios from 'axios'
 
-async function Last24H (port) {
+export async function Last24H(port: number) {
   try {
     await axios.get(`http://localhost:${port}/backup-size`)
-    const db = new SimplDB({
+    const db = new Database({
       dataFile: './status.json'
     })
+    db.toJSON()
+
+    type Data = {
+      [x: string]: any
+    }
 
     const currentHour = new Date().getHours()
-    const Dados = db.get('backup') || 0
-    const hourlyData = db.get('hourlyData') || []
+    const Dados = db.get<Data>('backup') || 0
+    const hourlyData = db.get<Data>('hourlyData') || []
 
     // Verifica se os dados já foram adicionados para a hora atual
-    const existingEntryIndex = hourlyData.findIndex(entry => entry.time === `${currentHour}h`)
+    const existingEntryIndex = hourlyData.findIndex((entry: { time: string }) => entry.time === `${currentHour}h`)
 
     if (existingEntryIndex !== -1) {
       // Sobrescreve os dados existentes para a hora atual
@@ -59,5 +64,3 @@ async function Last24H (port) {
     console.error('Erro ao salvar os dados:', error)
   }
 }
-
-module.exports = { Last24H }

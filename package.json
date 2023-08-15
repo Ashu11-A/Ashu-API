@@ -2,26 +2,38 @@
   "name": "ashu-api",
   "version": "1.0.0",
   "description": "![image](https://cdn.discordapp.com/attachments/1012411945141424218/1012430446556090468/JexactylBannerBasic.jpg)",
-  "main": "app.js",
+  "main": "app.ts",
+  "exports": {
+    "@/*": "./src/*"
+  },
   "scripts": {
-    "main": "node app.js",
-    "init": "npm i && node app.js",
-    "es-lint": "npx eslint '*.js' --fix"
+    "start:dev": "nodemon",
+    "build": "npx tsc",
+    "main": "node app.ts",
+    "init": "npm i && node app.ts",
+    "es-lint": "npx eslint '*.ts' --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.4.0",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "simpl.db": "^2.12.1",
-    "systeminformation": "^5.17.12"
+    "systeminformation": "^5.17.12",
+    "typescript": "^5.1.6"
   },
   "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.5.0",
     "eslint": "^8.41.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-promise": "^6.1.1"
+    "eslint-plugin-promise": "^6.1.1",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0"
   }
 }
