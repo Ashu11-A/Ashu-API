@@ -7,7 +7,7 @@
     "@/*": "./src/*"
   },
   "scripts": {
-    "start:dev": "nodemon",
+    "dev": "nodemon",
     "build": "npx tsc",
     "main": "node app.ts",
     "init": "npm i && node app.ts",

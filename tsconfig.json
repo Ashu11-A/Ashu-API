@@ -4,15 +4,15 @@
     "require": ["tsconfig-paths/register"]
   },
   "compilerOptions": {
-    "target": "es5",                          
+    "target": "ESNext",                          
     "module": "commonjs",                    
-    "lib": ["es6"],                     
+    "lib": ["ESNext"],                     
     "allowJs": true,
     "outDir": "build",                          
     "rootDir": "src",
     "baseUrl": "src",
     "paths": {
-      "@*": ["app/*"]
+      "@/*": ["app/*"]
     },
     "strict": true,         
     "noImplicitAny": true,

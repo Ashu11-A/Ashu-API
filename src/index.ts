@@ -1,7 +1,7 @@
 import { App } from "./app"
 import dotenv from "dotenv"
-import { BackupUpdate } from '@utils/BackupUpdate'
-import { Last24H } from '@utils/hourlyData'
+import { BackupUpdate } from '@/utils/BackupUpdate'
+import { Last24H } from '@/utils/hourlyData'
 dotenv.config()
 
 new App().server.listen(process.env.PORT, () => {
