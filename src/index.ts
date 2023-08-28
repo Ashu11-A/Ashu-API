@@ -8,10 +8,21 @@ new App().server.listen(process.env.PORT, () => {
   console.log(`Servidor listado em http://localhost:${process.env.PORT}`)
 })
 
-BackupUpdate()
-Last24H(Number(process.env.PORT))
-
-setInterval(() => {
+function UpdateInfos(): any {
   BackupUpdate()
-  Last24H(Number(process.env.PORT))
-}, 1000 * 60 * 30);
+  // Aqui o setTimeout é essencial para que os dados sejam atualizados antes que ele atualize
+  setTimeout(async () => {
+    Last24H(Number(process.env.PORT))
+  }, 10000);
+
+
+  setInterval(() => {
+    BackupUpdate()
+    // Mesmo comentário acima
+    setTimeout(async () => {
+      Last24H(Number(process.env.PORT))
+    }, 10000);
+  }, 1000 * 60 * 30);
+}
+
+UpdateInfos()

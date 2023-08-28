@@ -17,7 +17,7 @@ function getBackupSize(path: string, callback: any) {
 
   exec(command, (error, stdout) => {
     if (error) {
-      callback(null, 'Error 500')
+      callback(null, 0, "Bytes")
     } else {
       const size = Number(stdout.split('\t'))
       const [folderSizeMB, Type] = formatBytes(size)
@@ -28,10 +28,9 @@ function getBackupSize(path: string, callback: any) {
 
 export function BackupUpdate() {
 
-  const db = new Database({
+  const db: any = new Database({
     dataFile: './status.json'
   })
-  db.toJSON()
 
   const dataAtual = new Date()
   dataAtual.setDate(dataAtual.getDate() - 2)
@@ -57,7 +56,6 @@ export function BackupUpdate() {
         fileSize,
         fileType
       })
-      db.save()
     })
   })
 }

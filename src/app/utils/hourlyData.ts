@@ -4,18 +4,13 @@ import axios from 'axios'
 export async function Last24H(port: number) {
   try {
     await axios.get(`http://localhost:${port}/backup-size`)
-    const db = new Database({
+    const db: any = new Database({
       dataFile: './status.json'
     })
-    db.toJSON()
-
-    type Data = {
-      [x: string]: any
-    }
 
     const currentHour = new Date().getHours()
-    const Dados = db.get<Data>('backup') || 0
-    const hourlyData = db.get<Data>('hourlyData') || []
+    const { fileType, fileSize, folderType, folderSize } = db.get('backup')
+    let hourlyData = db.get('hourlyData') || []
 
     // Verifica se os dados já foram adicionados para a hora atual
     const existingEntryIndex = hourlyData.findIndex((entry: { time: string }) => entry.time === `${currentHour}h`)
@@ -25,29 +20,29 @@ export async function Last24H(port: number) {
       hourlyData[existingEntryIndex] = {
         time: `${currentHour}h`,
         title: 'Completo',
-        type: Dados.fileType,
-        size: Dados.fileSize
+        type: fileType,
+        size: fileSize
       }
 
       hourlyData[existingEntryIndex + 1] = {
         time: `${currentHour}h`,
         title: 'Espelhado',
-        type: Dados.folderType,
-        size: Dados.folderSize
+        type: folderType,
+        size: folderSize
       }
     } else {
       hourlyData.push({
         time: `${currentHour}h`,
         title: 'Completo',
-        type: Dados.fileType,
-        size: Dados.fileSize
+        type: fileType,
+        size: fileSize
       })
 
       hourlyData.push({
         time: `${currentHour}h`,
         title: 'Espelhado',
-        type: Dados.folderType,
-        size: Dados.folderSize
+        type: folderType,
+        size: folderSize
       })
     }
 
@@ -59,7 +54,7 @@ export async function Last24H(port: number) {
 
     db.set('hourlyData', hourlyData)
     db.save()
-    console.log('Dados salvos com sucesso:', hourlyData) // Verifique se os dados são exibidos corretamente
+    console.log('Dados salvos com sucesso:', hourlyData)
   } catch (error) {
     console.error('Erro ao salvar os dados:', error)
   }

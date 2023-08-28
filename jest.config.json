@@ -1,0 +1,7 @@
+{
+    "bail": 1,
+    "verbose": true,
+    "moduleNameMapper": {
+        "^@/(.*)$": "<rootDir>/src/app/$1"
+      }
+}
