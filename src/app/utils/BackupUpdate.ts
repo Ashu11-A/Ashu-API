@@ -1,5 +1,8 @@
 import { exec } from 'child_process'
 import { Database } from 'simpl.db'
+import dotenv from 'dotenv'
+dotenv.config()
+import * as fs from 'fs'
 
 function formatBytes(bytes: number, decimals = 2): [number, string] {
   if (bytes === 0) {
@@ -12,55 +15,74 @@ function formatBytes(bytes: number, decimals = 2): [number, string] {
   return [parseFloat((bytes / Math.pow(k, i)).toFixed(dm)), sizes[i]]
 }
 
-function getBackupSize(path: string, callback: {
-  (error: Error, folderSize: string, folderType: string): void;
-  (error: Error, fileSize: string, fileType: string): void;
-  (arg0: null, arg1: number, arg2: string): void
-}) {
+function getBackupSize(
+  path: string,
+  callback: (error: Error | null, size: string, type: string) => void
+) {
   const command = `du -sb ${path}`
 
   exec(command, (error, stdout) => {
     if (error) {
-      callback(null, 0, "Bytes")
+      callback(error, '0', 'Bytes')
     } else {
-      const size = Number(stdout.split('\t'))
+      const size = parseInt(stdout.trim().split('\t')[0])
       const [folderSizeMB, Type] = formatBytes(size)
-      callback(null, folderSizeMB, Type)
+      callback(null, folderSizeMB.toString(), Type)
     }
   })
 }
 
 export function BackupUpdate() {
-
   const db = new Database({
-    dataFile: './status.json'
+    dataFile: './status.json',
   })
 
-  const dataAtual = new Date()
-  dataAtual.setDate(dataAtual.getDate() - 2)
-  // Formatar a data no formato "YYYY-MM-DD"
-  const dataAnterior = dataAtual.toISOString().split('T')[0]
-  const folderPath = '/mnt/matheus/Backup/ptero/volumes'
-  const filePath = '/mnt/matheus/Backup/Servidores-' + dataAnterior + '.tar.bz2'
+  const folderPath = String(process.env.folderPath)
+  const filesPath = String(process.env.filesPath)
 
   getBackupSize(folderPath, (error, folderSize, folderType) => {
     if (error) {
       console.log(error)
+      return
     }
-    getBackupSize(filePath, (error, fileSize, fileType) => {
-      if (error) {
-        console.log(error)
+
+    fs.readdir(filesPath, (readDirError, files) => {
+      if (readDirError) {
+        console.error(readDirError)
+        return
       }
-      console.log(`Informações do sistema atualizadas.\nBackup Espelhado: ${folderSize}\nBackup Completo: ${fileSize}`)
-      db.set('backup', {
-        espelhado: folderSize + ' ' + folderType,
-        completo: fileSize + ' ' + fileType,
-        folderSize,
-        folderType,
-        fileSize,
-        fileType
+
+      const tarBz2Files = files.filter((file) => file.endsWith('.tar.bz2'))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const dataFiles: any = []
+
+      tarBz2Files.forEach((file) => {
+        const filePath = `${filesPath}/${file}`
+        getBackupSize(filePath, (error, fileSize, fileType) => {
+          if (error) {
+            console.log(error)
+          } else {
+            dataFiles.push({
+              file,
+              size: fileSize,
+              type: fileType,
+            })
+          }
+          db.set('backup', {
+            espelhado: folderSize + ' ' + folderType,
+            completo: dataFiles[0].size + ' ' + dataFiles[0].type,
+            syncBackup: {
+              folderSize,
+              folderType,
+            },
+            fullBackup: {
+              ...dataFiles
+            }
+          })
+          db.save()
+          console.log(db.get('backup'))
+        })
       })
     })
   })
 }
-

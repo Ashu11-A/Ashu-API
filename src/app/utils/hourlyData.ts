@@ -9,7 +9,8 @@ export async function Last24H(port: number) {
     })
 
     const currentHour = new Date().getHours()
-    const { fileType, fileSize, folderType, folderSize } = db.get('backup')
+    const { syncBackup, fullBackup } = db.get('backup')
+    const { folderSize, folderType } = syncBackup
     const hourlyData = db.get('hourlyData') || []
 
     // Verifica se os dados já foram adicionados para a hora atual
@@ -20,8 +21,8 @@ export async function Last24H(port: number) {
       hourlyData[existingEntryIndex] = {
         time: `${currentHour}h`,
         title: 'Completo',
-        type: fileType,
-        size: fileSize
+        type: fullBackup[0].type,
+        size: fullBackup[0].size
       }
 
       hourlyData[existingEntryIndex + 1] = {
@@ -34,8 +35,8 @@ export async function Last24H(port: number) {
       hourlyData.push({
         time: `${currentHour}h`,
         title: 'Completo',
-        type: fileType,
-        size: fileSize
+        type: fullBackup[0].type,
+        size: fullBackup[0].size
       })
 
       hourlyData.push({
