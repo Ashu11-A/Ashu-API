@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import si = require('systeminformation')
+import si from 'systeminformation'
 
 class SystemExpress {
   public async get(req: Request, res: Response) {

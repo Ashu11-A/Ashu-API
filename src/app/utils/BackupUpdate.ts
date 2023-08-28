@@ -12,7 +12,11 @@ function formatBytes(bytes: number, decimals = 2): [number, string] {
   return [parseFloat((bytes / Math.pow(k, i)).toFixed(dm)), sizes[i]]
 }
 
-function getBackupSize(path: string, callback: any) {
+function getBackupSize(path: string, callback: {
+  (error: Error, folderSize: string, folderType: string): void;
+  (error: Error, fileSize: string, fileType: string): void;
+  (arg0: null, arg1: number, arg2: string): void
+}) {
   const command = `du -sb ${path}`
 
   exec(command, (error, stdout) => {
@@ -28,7 +32,7 @@ function getBackupSize(path: string, callback: any) {
 
 export function BackupUpdate() {
 
-  const db: any = new Database({
+  const db = new Database({
     dataFile: './status.json'
   })
 
@@ -39,11 +43,11 @@ export function BackupUpdate() {
   const folderPath = '/mnt/matheus/Backup/ptero/volumes'
   const filePath = '/mnt/matheus/Backup/Servidores-' + dataAnterior + '.tar.bz2'
 
-  getBackupSize(folderPath, (error: any, folderSize: string, folderType: string) => {
+  getBackupSize(folderPath, (error, folderSize, folderType) => {
     if (error) {
       console.log(error)
     }
-    getBackupSize(filePath, (error: any, fileSize: string, fileType: string) => {
+    getBackupSize(filePath, (error, fileSize, fileType) => {
       if (error) {
         console.log(error)
       }

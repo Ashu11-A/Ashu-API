@@ -1,16 +1,16 @@
 import { Database } from 'simpl.db'
 import axios from 'axios'
-
 export async function Last24H(port: number) {
   try {
     await axios.get(`http://localhost:${port}/backup-size`)
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
     const db: any = new Database({
       dataFile: './status.json'
     })
 
     const currentHour = new Date().getHours()
     const { fileType, fileSize, folderType, folderSize } = db.get('backup')
-    let hourlyData = db.get('hourlyData') || []
+    const hourlyData = db.get('hourlyData') || []
 
     // Verifica se os dados já foram adicionados para a hora atual
     const existingEntryIndex = hourlyData.findIndex((entry: { time: string }) => entry.time === `${currentHour}h`)
